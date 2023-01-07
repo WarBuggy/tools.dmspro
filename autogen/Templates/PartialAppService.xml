@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Generate PartialAppService</TemplateName>
+	<ParamName>as</ParamName>
+	<ProjectName>Application</ProjectName>
+	<Path>|||PluralName|||\</Path>
+	<FileName>|||PluralName|||PartialAppService.cs</FileName>
+	<Content>
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DMSpro.OMS.Shared.Lib.Parser;
+using DMSpro.OMS.Shared.Domain.Devextreme;
+
+namespace -=-NameSpace-=-
+{
+	public partial class -=-PluralName-=-AppService
+	{
+		public virtual async Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)
+		{
+			var items = await _visitPlanRepository.GetQueryableAsync();
+			var base_dataloadoption = new DataSourceLoadOptionsBase();
+			DataLoadParser.Parse(base_dataloadoption,inputDev);
+			LoadResult results = DataSourceLoader.Load(items, base_dataloadoption);
+			results.data = ObjectMapper.Map&lt;IEnumerable&lt;VisitPlan&gt;, IEnumerable&lt;VisitPlanDto&gt;&gt;(results.data.Cast&lt;VisitPlan&gt;());
+			return results;
+		}
+	}
+}
+	</Content>
+</TemplateInfo>

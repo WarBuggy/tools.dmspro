@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Generate PartialController</TemplateName>
+	<ParamName>con</ParamName>
+	<ProjectName>HttpApi</ProjectName>
+	<Path>Controllers\|||PluralName|||\</Path>
+	<FileName>|||Name|||PartialController.cs</FileName>
+	<Content>
+using DevExtreme.AspNet.Data.ResponseModel;
+using DMSpro.OMS.Shared.Domain.Devextreme;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+
+namespace |||ControllerNameSpace|||
+{
+	public partial class |||Name|||Controller
+	{
+
+		[HttpGet]
+		[Route("GetListDevextremes")]
+		public Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)
+		{
+			return _visitPlansAppService.GetListDevextremesAsync(inputDev);
+		}
+	}
+}
+	</Content>
+</TemplateInfo>

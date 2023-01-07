@@ -6,7 +6,9 @@
 using System;
 using System.Collections.Immutable;
 using System.IO;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Xml.Serialization;
 
 const string SRC_FOLDER = "src/";
 bool Verbose;
@@ -43,7 +45,9 @@ try
     string SolutionRootDirectory = GetSolutionRootDirectoryPath(Options);
     string MicroServiceName = GetMicroServiceName(Options);
     Dictionary<string, string> PathsToProjects = GetPathsToProjects(SolutionRootDirectory, MicroServiceName);
-    GetAllObjectInfo(PathsToProjects["Domain"]);
+    List<ObjectInfo> AllObjectInfo = GetAllObjectInfo(PathsToProjects["Domain"]);
+    List<ObjectInfo> RequiredObjectInfo = GetRequiredObjectInfo(Options, AllObjectInfo);
+    List<TemplateInfo> AllTemplateInfo = GetAllTemplateInfo();
 }
 catch (Exception e)
 {
@@ -134,7 +138,10 @@ Dictionary<string, string> GetPathsToProjects(string solutionRootPath, string mi
             throw new Exception($"Path to project {project} not found. Please specify solution root directory using \"srd=PATH_TO_SOLUTION_ROOT_DIRECTORY\".");
         }
     }
-    Console.WriteLine($"All paths to projects found.");
+    if (Verbose)
+    {
+        Console.WriteLine($"All paths to projects found.");
+    }
     return result;
 }
 
@@ -199,13 +206,44 @@ ObjectInfo? GetObjectInfo(string directory)
     {
         return null;
     }
-    ObjectInfo result = new (objectName, plurals, nameSpace);
+    ObjectInfo result = new(objectName, plurals, nameSpace);
+    return result;
+}
+
+List<TemplateInfo> GetAllTemplateInfo()
+{
+    List<TemplateInfo> result = new();
+    string templatePath = Path.Combine(Directory.GetCurrentDirectory(), TemplateInfo.TEMPLATE_PATH);
+    string[] templateFileNames = Directory.GetFiles(templatePath, "*.xml", SearchOption.TopDirectoryOnly);
+    foreach (string fileName in templateFileNames)
+    {
+        using (var fileStream = File.Open(fileName, FileMode.Open))
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(TemplateInfo));
+            var templateInfo = (TemplateInfo?)serializer.Deserialize(fileStream);
+            if (templateInfo == null)
+            {
+                continue;
+            }
+            result.Add(templateInfo);
+        }
+    }
+    if (Verbose)
+    {
+        Console.WriteLine("Found the following templates:");
+        foreach (TemplateInfo templateInfo in result)
+        {
+            Console.WriteLine(templateInfo);
+            Console.WriteLine(templateInfo.Content);
+        }
+    }
     return result;
 }
 
 string? GetShortestStrings(string[] strings)
 {
-    int minLength = strings.Min(y => y.Length); // this gets you the shortest length of all elements in names
+    // this gets you the shortest length of all elements in names
+    int minLength = strings.Min(y => y.Length);
     return strings.FirstOrDefault(x => x.Length == minLength);
 }
 
@@ -246,6 +284,39 @@ string? GetNameSpaceFromFile(string pathToFile)
     return null;
 }
 
+List<ObjectInfo> GetRequiredObjectInfo(Dictionary<string, string> options, List<ObjectInfo> allObjectInfo)
+{
+    if (Verbose)
+    {
+        ObjectInfo.PrintList(allObjectInfo, "all found objects");
+    }
+    if (!options.ContainsKey("o"))
+    {
+        if (Verbose)
+        {
+            Console.WriteLine("No input object found. Templates will be generate for all found objects.");
+        }
+        return allObjectInfo;
+    }
+    List<string> inputObject = options["o"].Split(',').ToList();
+    List<ObjectInfo> result = new();
+    foreach (string input in inputObject)
+    {
+        foreach (ObjectInfo objectInfo in allObjectInfo)
+        {
+            if (objectInfo.Name == input)
+            {
+                result.Add(objectInfo);
+            }
+        }
+    }
+    if (Verbose)
+    {
+        ObjectInfo.PrintList(result, "objects that templates will be generated for");
+    }
+    return result;
+}
+
 class ObjectInfo
 {
     public string Name { get; set; }
@@ -262,6 +333,35 @@ class ObjectInfo
     public override string ToString()
     {
         return $"{Name}, {NamePlural}, {NameSpace}";
+    }
+
+    public static void PrintList(List<ObjectInfo> list, string listName = "")
+    {
+        if (listName != "")
+        {
+            Console.WriteLine($"List of {listName}:");
+        }
+        foreach (ObjectInfo item in list)
+        {
+            Console.WriteLine(item);
+        }
+    }
+}
+
+[XmlRoot("TemplateInfo")]
+public class TemplateInfo
+{
+    public static string TEMPLATE_PATH = "Templates\\";
+    public string? TemplateName { get; set; }
+    public string? ParamName { get; set; }
+    public string? ProjectName { get; set; }
+    public string? Path { get; set; }
+    public string? FileName { get; set; }
+    public string? Content { get; set; }
+
+    public override string ToString()
+    {
+        return $"{TemplateName} ({ParamName})";
     }
 }
 

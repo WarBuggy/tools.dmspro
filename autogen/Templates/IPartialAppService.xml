@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Generate IPartialAppService</TemplateName>
+	<ParamName>ias</ParamName>
+	<ProjectName>Application.Contracts</ProjectName>
+	<Path>|||PluralName|||\</Path>
+	<FileName>I|||PluralName|||PartialAppService.cs</FileName>
+	<Content>
+using System.Threading.Tasks;
+using DMSpro.OMS.Shared.Domain.Devextreme;
+using DevExtreme.AspNet.Data.ResponseModel;
+namespace -=-NameSpace-=-
+{
+	public partial interface I-=-PluralName-=-AppService
+	{
+		Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev);
+	}
+}
+	</Content>
+</TemplateInfo>
