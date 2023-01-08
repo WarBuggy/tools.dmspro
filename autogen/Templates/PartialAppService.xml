@@ -20,11 +20,11 @@ namespace -=-NameSpace-=-
 	{
 		public virtual async Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)
 		{
-			var items = await _visitPlanRepository.GetQueryableAsync();
+			var items = await _|||NameLowerCase|||Repository.GetQueryableAsync();
 			var base_dataloadoption = new DataSourceLoadOptionsBase();
 			DataLoadParser.Parse(base_dataloadoption,inputDev);
 			LoadResult results = DataSourceLoader.Load(items, base_dataloadoption);
-			results.data = ObjectMapper.Map&lt;IEnumerable&lt;VisitPlan&gt;, IEnumerable&lt;VisitPlanDto&gt;&gt;(results.data.Cast&lt;VisitPlan&gt;());
+			results.data = ObjectMapper.Map&lt;IEnumerable&lt;|||Name|||&gt;, IEnumerable&lt;|||Name|||Dto&gt;&gt;(results.data.Cast&lt;|||Name|||&gt;());
 			return results;
 		}
 	}

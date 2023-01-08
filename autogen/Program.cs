@@ -18,6 +18,7 @@ Dictionary<string, string> AcceptedParams = new()
     {"srd", "Solution root directory" },
     {"v", "Verbose" },
     {"o", "Objects" },
+    {"t", "Templates" },
 };
 
 List<string> Projects = new()
@@ -48,20 +49,18 @@ try
     List<ObjectInfo> AllObjectInfo = GetAllObjectInfo(PathsToProjects["Domain"]);
     List<ObjectInfo> RequiredObjectInfo = GetRequiredObjectInfo(Options, AllObjectInfo);
     List<TemplateInfo> AllTemplateInfo = GetAllTemplateInfo();
+    List<TemplateInfo> RrequiredTemplateInfo = GetRequiredTemplateInfo(Options, AllTemplateInfo);
 }
 catch (Exception e)
 {
-    ConsoleColor currentForegroundColor = Console.ForegroundColor;
-    Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine(e.Message);
-    Console.ForegroundColor = currentForegroundColor;
+    ConsoleWriteLineError(e.Message);
 }
 
 void ShowFoundParams(Dictionary<string, string> options)
 {
     if (options.Count > 0)
     {
-        Console.WriteLine("The following known params found:");
+        ConsoleWriteLineInfo("The following known params found:");
         foreach (string key in AcceptedParams.Keys)
         {
             if (!options.ContainsKey(key))
@@ -80,14 +79,14 @@ string GetSolutionRootDirectoryPath(Dictionary<string, string> options)
     {
         if (Verbose)
         {
-            Console.WriteLine($"Solution root directory found in args: {srdString}.");
+            ConsoleWriteLineInfo($"Solution root directory found in args: {srdString}.");
         }
         return srdString;
     }
     string result = $"{Directory.GetCurrentDirectory()}\\..\\..\\";
     if (Verbose)
     {
-        Console.WriteLine($"Solution root directory not found in args. Using current directory and go back two levels: {result}.");
+        ConsoleWriteLineInfo($"Solution root directory not found in args. Using current directory and go back two levels: {result}.");
     }
     return result;
 }
@@ -116,6 +115,7 @@ Dictionary<string, string> GetPathsToProjects(string solutionRootPath, string mi
     string srcPath = Path.Combine(solutionRootPath, microServiceName, SRC_FOLDER);
     List<string> allDirectories = Directory.GetDirectories(srcPath, "*", SearchOption.TopDirectoryOnly).ToList();
     Dictionary<string, string> result = new();
+    ConsoleWriteLineInfo($"Finding path to all projects...");
     foreach (string project in Projects)
     {
         bool found = false;
@@ -140,7 +140,7 @@ Dictionary<string, string> GetPathsToProjects(string solutionRootPath, string mi
     }
     if (Verbose)
     {
-        Console.WriteLine($"All paths to projects found.");
+        ConsoleWriteLineInfo($"All paths to projects found.");
     }
     return result;
 }
@@ -153,7 +153,7 @@ string GetMicroServiceName(Dictionary<string, string> options)
         result = msString;
         if (Verbose)
         {
-            Console.WriteLine($"Micro service found in args: {msString}.");
+            ConsoleWriteLineInfo($"Micro service found in args: {msString}.");
         }
         return result;
     }
@@ -172,6 +172,14 @@ List<ObjectInfo> GetAllObjectInfo(string pathToDomain)
             continue;
         }
         result.Add(objectInfo);
+    }
+    if (Verbose)
+    {
+        ConsoleWriteLineInfo("Found the following objects:");
+        foreach (ObjectInfo objectInfo in result)
+        {
+            Console.WriteLine(objectInfo);
+        }
     }
     return result;
 }
@@ -230,11 +238,10 @@ List<TemplateInfo> GetAllTemplateInfo()
     }
     if (Verbose)
     {
-        Console.WriteLine("Found the following templates:");
+        ConsoleWriteLineInfo("Found the following templates:");
         foreach (TemplateInfo templateInfo in result)
         {
             Console.WriteLine(templateInfo);
-            Console.WriteLine(templateInfo.Content);
         }
     }
     return result;
@@ -285,16 +292,12 @@ string? GetNameSpaceFromFile(string pathToFile)
 }
 
 List<ObjectInfo> GetRequiredObjectInfo(Dictionary<string, string> options, List<ObjectInfo> allObjectInfo)
-{
-    if (Verbose)
-    {
-        ObjectInfo.PrintList(allObjectInfo, "all found objects");
-    }
+{   
     if (!options.ContainsKey("o"))
     {
         if (Verbose)
         {
-            Console.WriteLine("No input object found. Templates will be generate for all found objects.");
+            ConsoleWriteLineInfo("No input object found. Templates will be generated for all found objects.");
         }
         return allObjectInfo;
     }
@@ -312,7 +315,62 @@ List<ObjectInfo> GetRequiredObjectInfo(Dictionary<string, string> options, List<
     }
     if (Verbose)
     {
-        ObjectInfo.PrintList(result, "objects that templates will be generated for");
+        ConsoleWriteLineInfo("Templates will be generated for the following objects:");
+        foreach (ObjectInfo objectInfo in result)
+        {
+            Console.WriteLine(objectInfo);
+        }
+    }
+    return result;
+}
+
+void ConsoleWriteLineWithColor(string message, ConsoleColor color)
+{
+    ConsoleColor currentForegroundColor = Console.ForegroundColor;
+    Console.ForegroundColor = color;
+    Console.WriteLine(message);
+    Console.ForegroundColor = currentForegroundColor;
+}
+
+void ConsoleWriteLineInfo(string message)
+{
+    ConsoleWriteLineWithColor(message, ConsoleColor.Green);
+}
+
+void ConsoleWriteLineError(string message)
+{
+    ConsoleWriteLineWithColor(message, ConsoleColor.Red);
+}
+
+List<TemplateInfo> GetRequiredTemplateInfo(Dictionary<string, string> options, List<TemplateInfo> allTemplateInfo)
+{
+    if (!options.ContainsKey("t"))
+    {
+        if (Verbose)
+        {
+            ConsoleWriteLineInfo("No input template found. All templates will be used for generation.");
+        }
+        return allTemplateInfo;
+    }
+    List<string> inputTemplate = options["t"].Split(',').ToList();
+    List<TemplateInfo> result = new();
+    foreach (string input in inputTemplate)
+    {
+        foreach (TemplateInfo templateInfo in allTemplateInfo)
+        {
+            if (templateInfo.ParamName == input)
+            {
+                result.Add(templateInfo);
+            }
+        }
+    }
+    if (Verbose)
+    {
+        ConsoleWriteLineInfo("The following templates will be used for generation:");
+        foreach (TemplateInfo templateInfo in result)
+        {
+            Console.WriteLine(templateInfo);
+        }
     }
     return result;
 }
@@ -333,18 +391,6 @@ class ObjectInfo
     public override string ToString()
     {
         return $"{Name}, {NamePlural}, {NameSpace}";
-    }
-
-    public static void PrintList(List<ObjectInfo> list, string listName = "")
-    {
-        if (listName != "")
-        {
-            Console.WriteLine($"List of {listName}:");
-        }
-        foreach (ObjectInfo item in list)
-        {
-            Console.WriteLine(item);
-        }
     }
 }
 
