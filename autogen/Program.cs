@@ -8,17 +8,27 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Xml.Serialization;
 
 const string SRC_FOLDER = "src/";
 bool Verbose;
+const string PARAM_MICRO_SERVICE_NAME = "ms";
+const string PARAM_SOLUTION_ROOT_PATH = "srd";
+const string PARAM_VERBOSE = "v";
+const string PARAM_OBJECTS = "o";
+const string PARAM_TEMPLATES = "t";
+const string PARAM_ADD_CONTROLLERS = "addc";
+const string PARAM_OVERRIDING = "override";
 Dictionary<string, string> AcceptedParams = new()
 {
-    {"ms", "Micro service name" },
-    {"srd", "Solution root directory" },
-    {"v", "Verbose" },
-    {"o", "Objects" },
-    {"t", "Templates" },
+    {PARAM_MICRO_SERVICE_NAME, "Micro service name" },
+    {PARAM_SOLUTION_ROOT_PATH, "Solution root directory" },
+    {PARAM_VERBOSE, "Verbose" },
+    {PARAM_OBJECTS, "Objects" },
+    {PARAM_TEMPLATES, "Templates" },
+    {PARAM_ADD_CONTROLLERS, "Add Controllers to controller namespaces" },
+    {PARAM_OVERRIDING, "Override existing file or not" },
 };
 
 List<string> Projects = new()
@@ -37,7 +47,7 @@ List<string> Projects = new()
 try
 {
     Dictionary<string, string> Options = ProcessArgs(args);
-    Verbose = CheckIfVerbose(Options);
+    Verbose = CheckBooleanParam(PARAM_VERBOSE, Options);
     if (Verbose)
     {
         ShowFoundParams(Options);
@@ -46,14 +56,52 @@ try
     string SolutionRootDirectory = GetSolutionRootDirectoryPath(Options);
     string MicroServiceName = GetMicroServiceName(Options);
     Dictionary<string, string> PathsToProjects = GetPathsToProjects(SolutionRootDirectory, MicroServiceName);
-    List<ObjectInfo> AllObjectInfo = GetAllObjectInfo(PathsToProjects["Domain"]);
+    bool AddControllersToControllerNameSpace = CheckBooleanParam(PARAM_ADD_CONTROLLERS, Options);
+    List<ObjectInfo> AllObjectInfo = GetAllObjectInfo(PathsToProjects["Domain"], AddControllersToControllerNameSpace);
     List<ObjectInfo> RequiredObjectInfo = GetRequiredObjectInfo(Options, AllObjectInfo);
     List<TemplateInfo> AllTemplateInfo = GetAllTemplateInfo();
-    List<TemplateInfo> RrequiredTemplateInfo = GetRequiredTemplateInfo(Options, AllTemplateInfo);
+    List<TemplateInfo> RequiredTemplateInfo = GetRequiredTemplateInfo(Options, AllTemplateInfo);
+    bool Overriding = CheckBooleanParam(PARAM_OVERRIDING, Options);
+    CreateTemplatesForObjects(RequiredObjectInfo, RequiredTemplateInfo, PathsToProjects, Overriding);
+    ConsoleWriteLineInfo("Generation finished.");
 }
 catch (Exception e)
 {
     ConsoleWriteLineError(e.Message);
+}
+
+void CreateTemplatesForObjects(List<ObjectInfo> objectInfoList, List<TemplateInfo> templateInfoList, 
+    Dictionary<string, string> pathToProjects, bool overrding)
+{
+    if (Verbose)
+    {
+        string isNot = overrding ? "" : "NOT";
+        ConsoleWriteLineInfo($"Overriding existing files will {isNot} be performed.");
+    }
+    foreach (ObjectInfo objectInfo in objectInfoList)
+    {
+        if (Verbose)
+        {
+            ConsoleWriteLineInfo($"Generation begins for object {objectInfo}.");
+        }
+        foreach (TemplateInfo templateInfo in templateInfoList)
+        {
+            TemplateHandler templateHander = new TemplateHandler(objectInfo, templateInfo, pathToProjects);
+            if (!overrding)
+            {
+                if (File.Exists(templateHander.FilePath))
+                {
+                    if (Verbose)
+                    {
+                        Console.WriteLine($"Skipped template {templateInfo} generation for object {objectInfo} (file already exists).");
+                    }
+                    continue;
+                }
+            }
+            WriteToFile(templateHander.FilePath, templateHander.Content);
+            Console.WriteLine($"Template {templateInfo} generated for object {objectInfo}.");
+        }
+    }
 }
 
 void ShowFoundParams(Dictionary<string, string> options)
@@ -115,7 +163,10 @@ Dictionary<string, string> GetPathsToProjects(string solutionRootPath, string mi
     string srcPath = Path.Combine(solutionRootPath, microServiceName, SRC_FOLDER);
     List<string> allDirectories = Directory.GetDirectories(srcPath, "*", SearchOption.TopDirectoryOnly).ToList();
     Dictionary<string, string> result = new();
-    ConsoleWriteLineInfo($"Finding path to all projects...");
+    if (Verbose)
+    {
+        ConsoleWriteLineInfo($"Finding path to all projects...");
+    }
     foreach (string project in Projects)
     {
         bool found = false;
@@ -160,13 +211,13 @@ string GetMicroServiceName(Dictionary<string, string> options)
     throw new Exception("Micro service name is required. Example: \"dotnet run ms=mdmservice\".");
 }
 
-List<ObjectInfo> GetAllObjectInfo(string pathToDomain)
+List<ObjectInfo> GetAllObjectInfo(string pathToDomain, bool addControllers)
 {
     List<ObjectInfo> result = new();
     List<string> allDirectories = Directory.GetDirectories(pathToDomain, "*", SearchOption.TopDirectoryOnly).ToList();
     foreach (string directory in allDirectories)
     {
-        var objectInfo = GetObjectInfo(directory);
+        var objectInfo = GetObjectInfo(directory, addControllers);
         if (objectInfo == null)
         {
             continue;
@@ -184,7 +235,7 @@ List<ObjectInfo> GetAllObjectInfo(string pathToDomain)
     return result;
 }
 
-ObjectInfo? GetObjectInfo(string directory)
+ObjectInfo? GetObjectInfo(string directory, bool addControllers)
 {
     string[] managerFileNames = Directory.GetFiles(directory, "*Manager.cs", SearchOption.TopDirectoryOnly);
     if (managerFileNames.Length < 1)
@@ -214,7 +265,7 @@ ObjectInfo? GetObjectInfo(string directory)
     {
         return null;
     }
-    ObjectInfo result = new(objectName, plurals, nameSpace);
+    ObjectInfo result = new(objectName, plurals, nameSpace, addControllers);
     return result;
 }
 
@@ -254,17 +305,17 @@ string? GetShortestStrings(string[] strings)
     return strings.FirstOrDefault(x => x.Length == minLength);
 }
 
-bool CheckIfVerbose(Dictionary<string, string> options)
+bool CheckBooleanParam(string paramName, Dictionary<string, string> options)
 {
-    if (!options.ContainsKey("v"))
+    if (!options.ContainsKey(paramName))
     {
         return false;
     }
-    string value = options["v"].ToLower();
+    string value = options[paramName].ToLower();
     if (value == "t")
     {
         value = "true";
-        options["v"] = value;
+        options[paramName] = value;
     }
     if (value != "true")
     {
@@ -292,7 +343,7 @@ string? GetNameSpaceFromFile(string pathToFile)
 }
 
 List<ObjectInfo> GetRequiredObjectInfo(Dictionary<string, string> options, List<ObjectInfo> allObjectInfo)
-{   
+{
     if (!options.ContainsKey("o"))
     {
         if (Verbose)
@@ -375,22 +426,64 @@ List<TemplateInfo> GetRequiredTemplateInfo(Dictionary<string, string> options, L
     return result;
 }
 
-class ObjectInfo
+//Taken from
+//https://learn.microsoft.com/en-us/dotnet/api/system.io.file.create?view=net-7.0
+void WriteToFile(string path, string content)
 {
-    public string Name { get; set; }
-    public string NamePlural { get; set; }
-    public string NameSpace { get; set; }
+    try
+    {
+        // Create the file, or overwrite if the file exists.
+        using FileStream fs = File.Create(path);
+        byte[] info = new UTF8Encoding(true).GetBytes(content);
+        // Add some information to the file.
+        fs.Write(info, 0, info.Length);
+    }
+    catch (Exception ex)
+    {
+        throw new Exception($"Cannot create file: {ex.Message}");
+    }
+}
 
-    public ObjectInfo(string name, string namePlural, string nameSpace)
+public class ObjectInfo
+{
+    public string Name { get; }
+    public string NamePlural { get; }
+    public string NameSpace { get; }
+    public string NameLowerCase { get; }
+    public string ControllerNameSpace { get; }
+
+    public ObjectInfo(string name, string namePlural, string nameSpace, bool addControllers)
     {
         Name = name;
         NamePlural = namePlural;
         NameSpace = nameSpace;
+        if (!char.IsUpper(name[0]))
+        {
+            NameLowerCase = name;
+        }
+        else if (name.Length == 1)
+        {
+            NameLowerCase = char.ToLower(name[0]).ToString();
+        }
+        else
+        {
+            NameLowerCase = char.ToLower(name[0]) + name[1..];
+        }
+        if (!addControllers)
+        {
+            ControllerNameSpace = nameSpace;
+        }
+        else
+        {
+            List<string> nameSpaceParts = nameSpace.Split('.').ToList();
+            nameSpaceParts.Insert(nameSpaceParts.Count - 1, "Controllers");
+            ControllerNameSpace = string.Join(".", nameSpaceParts);
+        }
     }
 
     public override string ToString()
     {
-        return $"{Name}, {NamePlural}, {NameSpace}";
+        return Name;
     }
 }
 
@@ -411,3 +504,35 @@ public class TemplateInfo
     }
 }
 
+public class TemplateHandler
+{
+    public string Content { get; }
+    public string FilePath { get; }
+
+    public TemplateHandler(ObjectInfo objectInfo, TemplateInfo templateInfo, Dictionary<string, string> pathToProjects)
+    {
+        Content = ReplaceContent(templateInfo.Content, objectInfo);
+        FilePath = CreateFilePath(templateInfo, objectInfo, pathToProjects);
+    }
+
+    static string ReplaceContent(string content, ObjectInfo objectInfo)
+    {
+        StringBuilder builder = new(content);
+        builder.Replace("|||Name|||", objectInfo.Name);
+        builder.Replace("|||NamePlural|||", objectInfo.NamePlural);
+        builder.Replace("|||NameSpace|||", objectInfo.NameSpace);
+        builder.Replace("|||NameLowerCase|||", objectInfo.NameLowerCase);
+        builder.Replace("|||ControllerNameSpace|||", objectInfo.ControllerNameSpace);
+        return builder.ToString();
+    }
+
+    static string CreateFilePath(TemplateInfo templateInfo, ObjectInfo objectInfo, Dictionary<string, string> pathToProjects)
+    {
+        string pathToProject = pathToProjects[templateInfo.ProjectName];
+        string path = Path.Combine(pathToProject, templateInfo.Path, templateInfo.FileName);
+        StringBuilder builder = new(path);
+        builder.Replace("|||NamePlural|||", objectInfo.NamePlural);
+        builder.Replace("|||Name|||", objectInfo.Name);
+        return builder.ToString();
+    }
+}

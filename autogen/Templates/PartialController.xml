@@ -3,10 +3,9 @@
 	<TemplateName>Generate PartialController</TemplateName>
 	<ParamName>con</ParamName>
 	<ProjectName>HttpApi</ProjectName>
-	<Path>Controllers\|||PluralName|||\</Path>
+	<Path>Controllers\|||NamePlural|||\</Path>
 	<FileName>|||Name|||PartialController.cs</FileName>
-	<Content>
-using DevExtreme.AspNet.Data.ResponseModel;
+	<Content>using DevExtreme.AspNet.Data.ResponseModel;
 using DMSpro.OMS.Shared.Domain.Devextreme;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -23,6 +22,5 @@ namespace |||ControllerNameSpace|||
 			return _visitPlansAppService.GetListDevextremesAsync(inputDev);
 		}
 	}
-}
-	</Content>
+}</Content>
 </TemplateInfo>

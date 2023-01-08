@@ -3,10 +3,9 @@
 	<TemplateName>Generate PartialAppService</TemplateName>
 	<ParamName>as</ParamName>
 	<ProjectName>Application</ProjectName>
-	<Path>|||PluralName|||\</Path>
-	<FileName>|||PluralName|||PartialAppService.cs</FileName>
-	<Content>
-using System.Linq;
+	<Path>|||NamePlural|||\</Path>
+	<FileName>|||NamePlural|||PartialAppService.cs</FileName>
+	<Content>using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DevExtreme.AspNet.Data;
@@ -14,9 +13,9 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using DMSpro.OMS.Shared.Lib.Parser;
 using DMSpro.OMS.Shared.Domain.Devextreme;
 
-namespace -=-NameSpace-=-
+namespace |||NameSpace|||
 {
-	public partial class -=-PluralName-=-AppService
+	public partial class |||NamePlural|||AppService
 	{
 		public virtual async Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)
 		{
@@ -28,6 +27,5 @@ namespace -=-NameSpace-=-
 			return results;
 		}
 	}
-}
-	</Content>
+}</Content>
 </TemplateInfo>
