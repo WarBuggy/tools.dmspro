@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "autogen": {
+      "commandName": "Project",
+      "commandLineArgs": "run ms=mdmService override=t o=Holiday v=t addc=t srd=C:\\code\\dmspro.oms\\"
+    }
+  }
+}

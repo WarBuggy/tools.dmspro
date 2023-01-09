@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TemplateInfo>
 	<TemplateName>Generate PartialAppService</TemplateName>
-	<ParamName>as</ParamName>
+	<ParamName>pas</ParamName>
 	<ProjectName>Application</ProjectName>
 	<Path>|||NamePlural|||\</Path>
 	<FileName>|||NamePlural|||PartialAppService.cs</FileName>

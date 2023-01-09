@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Modify IAppService</TemplateName>
+	<ParamName>ias</ParamName>
+	<ProjectName>Application.Contracts</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>I|||NamePlural|||AppService.cs</FileName>
+	<ModList>
+		<Job>
+			<Old>public interface I|||NamePlural|||AppService : IApplicationService</Old>
+			<New>public partial interface I|||NamePlural|||AppService : IApplicationService</New>
+		</Job>
+		<Job>
+			<Old>Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev);</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>using DMSpro.OMS.Shared.Domain.Devextreme;</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>using DevExtreme.AspNet.Data.ResponseModel;</Old>
+			<New></New>
+		</Job>
+	</ModList>
+</TemplateInfo>
+
+

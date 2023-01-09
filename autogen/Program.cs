@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 using DMSpro.OMS.Tools.AutoGen;
@@ -11,6 +12,7 @@ const string PARAM_SOLUTION_ROOT_PATH = "srd";
 const string PARAM_VERBOSE = "v";
 const string PARAM_OBJECTS = "o";
 const string PARAM_TEMPLATES = "t";
+const string PARAM_SKIP_TEMPLATES = "st";
 const string PARAM_ADD_CONTROLLERS = "addc";
 const string PARAM_OVERRIDING = "override";
 Dictionary<string, string> AcceptedParams = new()
@@ -20,6 +22,7 @@ Dictionary<string, string> AcceptedParams = new()
     {PARAM_VERBOSE, "Verbose" },
     {PARAM_OBJECTS, "Objects" },
     {PARAM_TEMPLATES, "Templates" },
+    {PARAM_SKIP_TEMPLATES, "Skip templates" },
     {PARAM_ADD_CONTROLLERS, "Add Controllers to controller namespaces" },
     {PARAM_OVERRIDING, "Override existing file or not" },
 };
@@ -55,7 +58,7 @@ try
     List<TemplateInfo> AllTemplateInfo = GetAllTemplateInfo();
     List<TemplateInfo> RequiredTemplateInfo = GetRequiredTemplateInfo(Options, AllTemplateInfo);
     bool Overriding = CheckBooleanParam(PARAM_OVERRIDING, Options);
-    CreateTemplatesForObjects(RequiredObjectInfo, RequiredTemplateInfo, PathsToProjects, Overriding);
+    ProcessTemplatesForObjects(RequiredObjectInfo, RequiredTemplateInfo, PathsToProjects, Overriding);
     ConsoleWriteLineInfo("Generation finished.");
 }
 catch (Exception e)
@@ -63,12 +66,12 @@ catch (Exception e)
     ConsoleWriteLineError(e.Message);
 }
 
-void CreateTemplatesForObjects(List<ObjectInfo> objectInfoList, List<TemplateInfo> templateInfoList, 
-    Dictionary<string, string> pathToProjects, bool overrding)
+void ProcessTemplatesForObjects(List<ObjectInfo> objectInfoList, List<TemplateInfo> templateInfoList,
+    Dictionary<string, string> pathToProjects, bool overriding)
 {
     if (Verbose)
     {
-        string isNot = overrding ? "" : "NOT";
+        string isNot = overriding ? "" : "NOT";
         ConsoleWriteLineInfo($"Overriding existing files will {isNot} be performed.");
     }
     foreach (ObjectInfo objectInfo in objectInfoList)
@@ -79,20 +82,24 @@ void CreateTemplatesForObjects(List<ObjectInfo> objectInfoList, List<TemplateInf
         }
         foreach (TemplateInfo templateInfo in templateInfoList)
         {
-            TemplateHandler templateHander = new TemplateHandler(objectInfo, templateInfo, pathToProjects);
-            if (!overrding)
+            TemplateHandler templateHandler = new TemplateHandler(objectInfo, templateInfo, pathToProjects);
+            if (!overriding && File.Exists(templateHandler.FilePath))
             {
-                if (File.Exists(templateHander.FilePath))
+                if (Verbose)
                 {
-                    if (Verbose)
-                    {
-                        Console.WriteLine($"Skipped template {templateInfo} generation for object {objectInfo} (file already exists).");
-                    }
-                    continue;
+                    Console.WriteLine($"Skipped template {templateInfo} generation for object {objectInfo} (file already exists).");
                 }
+                continue;
             }
-            WriteToFile(templateHander.FilePath, templateHander.Content);
-            Console.WriteLine($"Template {templateInfo} generated for object {objectInfo}.");
+            if (!string.IsNullOrEmpty(templateHandler.NewContent))
+            {
+                WriteToFile(templateHandler.FilePath, templateHandler.NewContent);
+            }
+            else if (!string.IsNullOrEmpty(templateHandler.ModContent))
+            {
+                WriteToFile(templateHandler.FilePath, templateHandler.ModContent);
+            }
+            Console.WriteLine($"Template {templateInfo} processed successfully for object {objectInfo}.");
         }
     }
 }
@@ -269,15 +276,19 @@ List<TemplateInfo> GetAllTemplateInfo()
     string[] templateFileNames = Directory.GetFiles(templatePath, "*.xml", SearchOption.TopDirectoryOnly);
     foreach (string fileName in templateFileNames)
     {
+        if (Verbose)
+        {
+            Console.WriteLine($"Parsing template file {fileName}.");
+        }
         using (var fileStream = File.Open(fileName, FileMode.Open))
         {
+            var templateInfo = new TemplateInfo();
             XmlSerializer serializer = new XmlSerializer(typeof(TemplateInfo));
-            var templateInfo = (TemplateInfo?)serializer.Deserialize(fileStream);
-            if (templateInfo == null)
+            templateInfo = (TemplateInfo?)serializer.Deserialize(fileStream);
+            if (templateInfo != null)
             {
-                continue;
+                result.Add(templateInfo);
             }
-            result.Add(templateInfo);
         }
     }
     if (Verbose)
@@ -388,16 +399,49 @@ void ConsoleWriteLineError(string message)
 
 List<TemplateInfo> GetRequiredTemplateInfo(Dictionary<string, string> options, List<TemplateInfo> allTemplateInfo)
 {
+    if (Verbose)
+    {
+        ConsoleWriteLineInfo("Checking for skipped templates...");
+    }
+    int skipped = 0;
+    List<string> skippedTemplates = options[PARAM_SKIP_TEMPLATES].Split(',').ToList();
+    for (int i = allTemplateInfo.Count - 1; i >= 0; i--)
+    {
+        if (skippedTemplates.Contains(allTemplateInfo[i].ParamName))
+        {
+            if (Verbose)
+            {
+                Console.WriteLine($"Template {allTemplateInfo[i].TemplateName} is asked to be skipped.");
+            }
+            allTemplateInfo.RemoveAt(i);
+            skipped++;
+        }
+    }
+    if (Verbose && skipped == 0)
+    {
+        ConsoleWriteLineInfo("No template will be skipped.");
+    }
     if (!options.ContainsKey(PARAM_TEMPLATES))
     {
         if (Verbose)
         {
-            ConsoleWriteLineInfo("No input template found. All templates will be used for generation.");
+            if (skipped > 0)
+            {
+                ConsoleWriteLineInfo("No input template found. The following templates will be used for generation:");
+                foreach (TemplateInfo templateInfo in allTemplateInfo)
+                {
+                    Console.WriteLine(templateInfo);
+                }
+            }
+            else
+            {
+                ConsoleWriteLineInfo("No input template found. All found templates will be used for generation:");
+            }
         }
         return allTemplateInfo;
     }
-    List<string> inputTemplate = options[PARAM_TEMPLATES].Split(',').ToList();
     List<TemplateInfo> result = new();
+    List<string> inputTemplate = options[PARAM_TEMPLATES].Split(',').ToList();
     foreach (string input in inputTemplate)
     {
         foreach (TemplateInfo templateInfo in allTemplateInfo)

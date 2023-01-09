@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Modify AppService</TemplateName>
+	<ParamName>as</ParamName>
+	<ProjectName>Application</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>|||NamePlural|||AppService.cs</FileName>
+	<ModList>
+		<Job>
+			<Old>public class |||NamePlural|||AppService : ApplicationService, I|||NamePlural|||AppService</Old>
+			<New>public partial class |||NamePlural|||AppService : ApplicationService, I|||NamePlural|||AppService</New>
+		</Job>
+		<Job>
+			<Old>using DevExtreme.AspNet.Data;</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>using DevExtreme.AspNet.Data.ResponseModel;</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>using DMSpro.OMS.Shared.Lib.Parser;</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>using DMSpro.OMS.Shared.Domain.Devextreme;</Old>
+			<New></New>
+		</Job>
+	</ModList>
+</TemplateInfo>
+
+
+
+

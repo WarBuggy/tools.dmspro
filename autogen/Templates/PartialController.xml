@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TemplateInfo>
 	<TemplateName>Generate PartialController</TemplateName>
-	<ParamName>con</ParamName>
+	<ParamName>pcon</ParamName>
 	<ProjectName>HttpApi</ProjectName>
 	<Path>Controllers\|||NamePlural|||\</Path>
 	<FileName>|||Name|||PartialController.cs</FileName>

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Modify Controller</TemplateName>
+	<ParamName>con</ParamName>
+	<ProjectName>HttpApi</ProjectName>
+	<Path>Controllers\|||NamePlural|||\</Path>
+	<FileName>|||Name|||Controller.cs</FileName>
+	<ModList>
+		<Job>
+			<Old>public class |||Name|||Controller : AbpController, I|||NamePlural|||AppService</Old>
+			<New>public partial class |||Name|||Controller : AbpController, I|||NamePlural|||AppService</New>
+		</Job>
+		<Job>
+			<Old>//Dev</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>using DevExtreme.AspNet.Data.ResponseModel;</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>using DevExtreme.AspNet.Data;</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>using DMSpro.OMS.Shared.Domain.Devextreme;</Old>
+			<New></New>
+		</Job>
+		<!--
+		<Job>
+			<Old>[HttpGet]\r\n        [Route("GetListDevextremes")]\r\n        public Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)\r\n        {\r\n            return _holidayDetailsAppService.GetListDevextremesAsync(inputDev);\r\n        }\r\n</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>[HttpGet][Route("GetListDevextremes")]public Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev){return _holidayDetailsAppService.GetListDevextremesAsync(inputDev);}</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>[Route("GetListDevextremes")]        public Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>[Route("GetListDevextremes")]NEWLINEHERE        public Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>[Route("GetListDevextremes")]\r\npublic Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)</Old>
+			<New></New>
+		</Job>
+		<Job>
+			<Old>[Route("GetListDevextremes")]
+        public Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)</Old>
+			<New></New>
+		</Job>
+		-->
+	</ModList>
+</TemplateInfo>
+
+
+
+
