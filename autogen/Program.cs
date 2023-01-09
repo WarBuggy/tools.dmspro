@@ -1,15 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-// ms
-// srd
-// v
-using System;
-using System.Collections.Immutable;
-using System.IO;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml.Serialization;
+using DMSpro.OMS.Tools.AutoGen;
 
 const string SRC_FOLDER = "src/";
 bool Verbose;
@@ -123,7 +116,7 @@ void ShowFoundParams(Dictionary<string, string> options)
 
 string GetSolutionRootDirectoryPath(Dictionary<string, string> options)
 {
-    if (options.TryGetValue("srd", out var srdString))
+    if (options.TryGetValue(PARAM_SOLUTION_ROOT_PATH, out var srdString))
     {
         if (Verbose)
         {
@@ -199,7 +192,7 @@ Dictionary<string, string> GetPathsToProjects(string solutionRootPath, string mi
 string GetMicroServiceName(Dictionary<string, string> options)
 {
     string result = "";
-    if (options.TryGetValue("ms", out var msString))
+    if (options.TryGetValue(PARAM_MICRO_SERVICE_NAME, out var msString))
     {
         result = msString;
         if (Verbose)
@@ -312,7 +305,7 @@ bool CheckBooleanParam(string paramName, Dictionary<string, string> options)
         return false;
     }
     string value = options[paramName].ToLower();
-    if (value == "t")
+    if (value == PARAM_TEMPLATES)
     {
         value = "true";
         options[paramName] = value;
@@ -344,7 +337,7 @@ string? GetNameSpaceFromFile(string pathToFile)
 
 List<ObjectInfo> GetRequiredObjectInfo(Dictionary<string, string> options, List<ObjectInfo> allObjectInfo)
 {
-    if (!options.ContainsKey("o"))
+    if (!options.ContainsKey(PARAM_OBJECTS))
     {
         if (Verbose)
         {
@@ -352,7 +345,7 @@ List<ObjectInfo> GetRequiredObjectInfo(Dictionary<string, string> options, List<
         }
         return allObjectInfo;
     }
-    List<string> inputObject = options["o"].Split(',').ToList();
+    List<string> inputObject = options[PARAM_OBJECTS].Split(',').ToList();
     List<ObjectInfo> result = new();
     foreach (string input in inputObject)
     {
@@ -395,7 +388,7 @@ void ConsoleWriteLineError(string message)
 
 List<TemplateInfo> GetRequiredTemplateInfo(Dictionary<string, string> options, List<TemplateInfo> allTemplateInfo)
 {
-    if (!options.ContainsKey("t"))
+    if (!options.ContainsKey(PARAM_TEMPLATES))
     {
         if (Verbose)
         {
@@ -403,7 +396,7 @@ List<TemplateInfo> GetRequiredTemplateInfo(Dictionary<string, string> options, L
         }
         return allTemplateInfo;
     }
-    List<string> inputTemplate = options["t"].Split(',').ToList();
+    List<string> inputTemplate = options[PARAM_TEMPLATES].Split(',').ToList();
     List<TemplateInfo> result = new();
     foreach (string input in inputTemplate)
     {
@@ -441,98 +434,5 @@ void WriteToFile(string path, string content)
     catch (Exception ex)
     {
         throw new Exception($"Cannot create file: {ex.Message}");
-    }
-}
-
-public class ObjectInfo
-{
-    public string Name { get; }
-    public string NamePlural { get; }
-    public string NameSpace { get; }
-    public string NameLowerCase { get; }
-    public string ControllerNameSpace { get; }
-
-    public ObjectInfo(string name, string namePlural, string nameSpace, bool addControllers)
-    {
-        Name = name;
-        NamePlural = namePlural;
-        NameSpace = nameSpace;
-        if (!char.IsUpper(name[0]))
-        {
-            NameLowerCase = name;
-        }
-        else if (name.Length == 1)
-        {
-            NameLowerCase = char.ToLower(name[0]).ToString();
-        }
-        else
-        {
-            NameLowerCase = char.ToLower(name[0]) + name[1..];
-        }
-        if (!addControllers)
-        {
-            ControllerNameSpace = nameSpace;
-        }
-        else
-        {
-            List<string> nameSpaceParts = nameSpace.Split('.').ToList();
-            nameSpaceParts.Insert(nameSpaceParts.Count - 1, "Controllers");
-            ControllerNameSpace = string.Join(".", nameSpaceParts);
-        }
-    }
-
-    public override string ToString()
-    {
-        return Name;
-    }
-}
-
-[XmlRoot("TemplateInfo")]
-public class TemplateInfo
-{
-    public static string TEMPLATE_PATH = "Templates\\";
-    public string? TemplateName { get; set; }
-    public string? ParamName { get; set; }
-    public string? ProjectName { get; set; }
-    public string? Path { get; set; }
-    public string? FileName { get; set; }
-    public string? Content { get; set; }
-
-    public override string ToString()
-    {
-        return $"{TemplateName} ({ParamName})";
-    }
-}
-
-public class TemplateHandler
-{
-    public string Content { get; }
-    public string FilePath { get; }
-
-    public TemplateHandler(ObjectInfo objectInfo, TemplateInfo templateInfo, Dictionary<string, string> pathToProjects)
-    {
-        Content = ReplaceContent(templateInfo.Content, objectInfo);
-        FilePath = CreateFilePath(templateInfo, objectInfo, pathToProjects);
-    }
-
-    static string ReplaceContent(string content, ObjectInfo objectInfo)
-    {
-        StringBuilder builder = new(content);
-        builder.Replace("|||Name|||", objectInfo.Name);
-        builder.Replace("|||NamePlural|||", objectInfo.NamePlural);
-        builder.Replace("|||NameSpace|||", objectInfo.NameSpace);
-        builder.Replace("|||NameLowerCase|||", objectInfo.NameLowerCase);
-        builder.Replace("|||ControllerNameSpace|||", objectInfo.ControllerNameSpace);
-        return builder.ToString();
-    }
-
-    static string CreateFilePath(TemplateInfo templateInfo, ObjectInfo objectInfo, Dictionary<string, string> pathToProjects)
-    {
-        string pathToProject = pathToProjects[templateInfo.ProjectName];
-        string path = Path.Combine(pathToProject, templateInfo.Path, templateInfo.FileName);
-        StringBuilder builder = new(path);
-        builder.Replace("|||NamePlural|||", objectInfo.NamePlural);
-        builder.Replace("|||Name|||", objectInfo.Name);
-        return builder.ToString();
     }
 }

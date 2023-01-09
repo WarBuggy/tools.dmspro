@@ -19,7 +19,7 @@ namespace |||ControllerNameSpace|||
 		[Route("GetListDevextremes")]
 		public Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)
 		{
-			return _visitPlansAppService.GetListDevextremesAsync(inputDev);
+			return _|||NamePluralLowerCase|||AppService.GetListDevextremesAsync(inputDev);
 		}
 	}
 }</Content>
