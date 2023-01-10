@@ -404,7 +404,11 @@ List<TemplateInfo> GetRequiredTemplateInfo(Dictionary<string, string> options, L
         ConsoleWriteLineInfo("Checking for skipped templates...");
     }
     int skipped = 0;
-    List<string> skippedTemplates = options[PARAM_SKIP_TEMPLATES].Split(',').ToList();
+    List<string> skippedTemplates = new();
+    if (options.ContainsKey(PARAM_SKIP_TEMPLATES))
+    {
+        skippedTemplates = options[PARAM_SKIP_TEMPLATES].Split(',').ToList();
+    }
     for (int i = allTemplateInfo.Count - 1; i >= 0; i--)
     {
         if (skippedTemplates.Contains(allTemplateInfo[i].ParamName))
