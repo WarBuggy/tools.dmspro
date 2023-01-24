@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Inherited Manager for Header in SO/PO Module</TemplateName>
+	<ParamName>sopo_h_mana</ParamName>
+	<ProjectName>Domain</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>|||Name|||Manager.cs</FileName>
+	<Content>using DMSpro.OMS.OrderService.BaseHeaders;
+
+namespace DMSpro.OMS.OrderService.|||NamePlural|||
+{
+	public class |||Name|||Manager 
+		: BaseHeaderManager&lt;|||Name|||, I|||Name|||Repository&gt;,
+		I|||Name|||Manager
+	{
+		public |||Name|||Manager(I|||Name|||Repository repository)
+			: base(repository)
+		{
+		}
+	}
+}</Content>
+</TemplateInfo>

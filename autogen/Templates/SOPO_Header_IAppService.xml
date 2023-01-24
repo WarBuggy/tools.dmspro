@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Inherited IAppService for Header in SO/PO Module</TemplateName>
+	<ParamName>sopo_h_ias</ParamName>
+	<ProjectName>Application.Contracts</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>I|||NamePlural|||AppService.cs</FileName>
+	<Content>using DMSpro.OMS.OrderService.BaseHeaders;
+
+namespace DMSpro.OMS.OrderService.|||NamePlural|||
+{
+	public interface I|||NamePlural|||AppService : IBaseHeadersAppService
+	{
+	}
+}</Content>
+</TemplateInfo>

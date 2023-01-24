@@ -473,6 +473,15 @@ void WriteToFile(string path, string content)
 {
     try
     {
+        string? directoryPath = Path.GetDirectoryName(path);
+        if (directoryPath == null) {
+            throw new Exception($"Cannot get directory of path: {path}. Failed to create file.");
+        }
+        bool exists = Directory.Exists(directoryPath);
+        if (!exists)
+        { 
+            Directory.CreateDirectory(directoryPath);
+        }
         // Create the file, or overwrite if the file exists.
         using FileStream fs = File.Create(path);
         byte[] info = new UTF8Encoding(true).GetBytes(content);

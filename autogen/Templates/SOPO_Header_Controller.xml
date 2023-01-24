@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Inherited Controller for Header in SO/PO Module</TemplateName>
+	<ParamName>sopo_h_con</ParamName>
+	<ProjectName>HttpApi</ProjectName>
+	<Path>Controllers\|||NamePlural|||\</Path>
+	<FileName>|||Name|||Controller.cs</FileName>
+	<Content>using DMSpro.OMS.OrderService.Controllers.BaseHeaders;
+using DMSpro.OMS.OrderService.|||NamePlural|||;
+using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
+
+namespace DMSpro.OMS.OrderService.Controllers.|||NamePlural|||
+{
+	[RemoteService(Name = "OrderService")]
+	[Area("orderService")]
+	[ControllerName("|||Name|||")]
+	[Route("api/order-service/INSERT-HERE")]
+	[ApiExplorerSettings(IgnoreApi = false)]
+	public class |||Name|||Controller : BaseHeaderController, I|||NamePlural|||AppService
+	{
+		public |||Name|||Controller(I|||NamePlural|||AppService appService)
+			: base(appService)
+		{
+		}
+	}
+}</Content>
+</TemplateInfo>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Inherited IManager for Detail in SO/PO Module</TemplateName>
+	<ParamName>sopo_d_imana</ParamName>
+	<ProjectName>Domain</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>I|||Name|||Manager.cs</FileName>
+	<Content>using DMSpro.OMS.OrderService.BaseDetails;
+
+namespace DMSpro.OMS.OrderService.|||NamePlural|||
+{
+	public interface I|||Name|||Manager
+		: IBaseDetailManager&lt;|||Name|||, IBaseDetailRepository&lt;|||Name|||&gt;&gt;
+	{
+    }
+}</Content>
+</TemplateInfo>

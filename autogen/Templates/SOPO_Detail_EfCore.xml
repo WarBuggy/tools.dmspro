@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Inherited EfCoreRepository for Detail in SO/PO Module</TemplateName>
+	<ParamName>sopo_d_efcore</ParamName>
+	<ProjectName>EntityFrameworkCore</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>EfCore|||Name|||Repository.cs</FileName>
+	<Content>using DMSpro.OMS.OrderService.BaseDetails;
+using DMSpro.OMS.OrderService.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore;
+
+namespace DMSpro.OMS.OrderService.|||NamePlural|||
+{
+	public class EfCore|||Name|||Repository : EfCoreBaseDetailRepository&lt;|||Name|||&gt;,
+		I|||Name|||Repository
+	{
+		public EfCore|||Name|||Repository(IDbContextProvider&lt;OrderServiceDbContext&gt; dbContextProvider)
+			: base(dbContextProvider)
+        {
+        }
+    }
+}</Content>
+</TemplateInfo>
