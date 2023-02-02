@@ -49,7 +49,16 @@ public partial class |||Name|||ClientProxy : ClientProxyBase&lt;I|||NamePlural||
 		});
 	}
 
-	public virtual async Task&lt;BaseDetailDto&gt; GetDetailAsync(Guid detailId)
+	public virtual async Task&lt;BaseDocDto&gt; UpdateDoc(Guid headerId, BaseDocCreateDto input)
+	{
+		return await RequestAsync&lt;BaseDocDto&gt;(nameof(UpdateDoc), new ClientProxyRequestTypeValue
+		{
+			{ typeof(Guid), headerId },
+			{ typeof(BaseDocCreateDto), input }
+		});
+	}
+
+		public virtual async Task&lt;BaseDetailDto&gt; GetDetailAsync(Guid detailId)
 	{
 		return await RequestAsync&lt;BaseDetailDto&gt;(nameof(GetDetailAsync), new ClientProxyRequestTypeValue
 		{
