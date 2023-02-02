@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Inherited AppService for common Doc in SO/PO Module</TemplateName>
+	<ParamName>sopo_doc_as</ParamName>
+	<ProjectName>Application</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>|||NamePlural|||AppService.cs</FileName>
+	<Content>using DMSpro.OMS.OrderService.BaseDocs;
+using DMSpro.OMS.OrderService.Permissions;
+using DMSpro.OMS.OrderService.|||Name|||Details;
+using DMSpro.OMS.OrderService.|||Name|||Headers;
+using Volo.Abp.Caching;
+using Volo.Abp.MultiTenancy;
+using Volo.Abp.Users;
+using Microsoft.Extensions.Configuration;
+
+namespace DMSpro.OMS.OrderService.|||NamePlural|||
+{
+	public class |||NamePlural|||AppService
+		: BaseDocsAppService&lt;|||Name|||Header, |||Name|||Detail&gt;, I|||NamePlural|||AppService
+	{
+		public |||NamePlural|||AppService(I|||Name|||HeaderRepository headerRepository,
+		I|||Name|||HeaderManager headerManager,
+		I|||Name|||DetailRepository detailRepository,
+		I|||Name|||DetailManager detailManager,
+		IDistributedCache&lt;BaseDocExcelDownloadTokenCacheItem, string&gt; excelDownloadTokenCache,
+        IConfiguration settingProvider,
+        ICurrentUser currentUser,
+        ICurrentTenant currentTenant) : base(headerRepository, headerManager,
+                detailRepository, detailManager,
+                OrderServicePermissions.|||NamePlural|||.Default, "INSERT-HERE", 
+                excelDownloadTokenCache,
+                settingProvider, currentUser, currentTenant) 
+        {
+        }
+    }
+}</Content>
+</TemplateInfo>

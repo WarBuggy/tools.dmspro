@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Partial EfCore</TemplateName>
+	<ParamName>mdm_codebyid_efcorepartial</ParamName>
+	<ProjectName>EntityFrameworkCore</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>EfCore|||Name|||PartialRepository.cs</FileName>
+	<Content>using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace DMSpro.OMS.MdmService.|||NamePlural|||
+{
+	public partial class EfCore|||Name|||Repository
+	{
+		public virtual async Task&lt;Guid?&gt; GetIdByCodeAsync(string code)
+        {
+            var item = (await GetDbSetAsync()).Where(x => x.Code == code).FirstOrDefault();
+            return item?.Id;
+        }
+    }
+}</Content>
+</TemplateInfo>

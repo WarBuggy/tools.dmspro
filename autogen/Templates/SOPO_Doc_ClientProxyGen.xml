@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Client Proxy Generated for common Doc in SO/PO Module</TemplateName>
+	<ParamName>sopo_doc_cpg</ParamName>
+	<ProjectName>HttpApi.Client</ProjectName>
+	<Path>ClientProxies\DMSpro\OMS\OrderService\Controllers\|||NamePlural|||\</Path>
+	<FileName>|||Name|||ClientProxy.Generated.cs</FileName>
+	<Content>using System;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.DependencyInjection;
+using Volo.Abp.Http.Client.ClientProxying;
+using DMSpro.OMS.OrderService.BaseDocs;
+using DMSpro.OMS.OrderService.BaseDetails;
+using Volo.Abp.Content;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DMSpro.OMS.Shared.Domain.Devextreme;
+using DMSpro.OMS.OrderService.Shared;
+using DMSpro.OMS.OrderService.BaseHeaders;
+using DMSpro.OMS.OrderService.|||NamePlural|||;
+
+namespace DMSpro.OMS.OrderService.Controllers.|||NamePlural|||;
+
+[Dependency(ReplaceServices = true)]
+[ExposeServices(typeof(I|||NamePlural|||AppService), typeof(|||Name|||ClientProxy))]
+public partial class |||Name|||ClientProxy : ClientProxyBase&lt;I|||NamePlural|||AppService&gt;, I|||NamePlural|||AppService
+{
+	public virtual async Task&lt;bool&gt; ApproveDoc(Guid headerId)
+	{
+		return await RequestAsync&lt;bool&gt;(nameof(ApproveDoc), new ClientProxyRequestTypeValue
+		{
+			{ typeof(Guid), headerId }
+		});
+	}
+
+	public virtual async Task&lt;string&gt; CancelDoc(Guid headerId)
+	{
+		return await RequestAsync&lt;string&gt;(nameof(CancelDoc), new ClientProxyRequestTypeValue
+		{
+			{ typeof(Guid), headerId }
+		});
+	}
+
+	public virtual async Task&lt;BaseDocDto&gt; CreateDoc(BaseDocCreateDto input)
+	{
+		return await RequestAsync&lt;BaseDocDto&gt;(nameof(CreateDoc), new ClientProxyRequestTypeValue
+		{
+			{ typeof(BaseDocCreateDto), input }
+		});
+	}
+
+	public virtual async Task&lt;BaseDetailDto&gt; GetDetailAsync(Guid detailId)
+	{
+		return await RequestAsync&lt;BaseDetailDto&gt;(nameof(GetDetailAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(Guid), detailId }
+		});
+	}
+
+	public virtual async Task&lt;IRemoteStreamContent&gt; GetDetailListAsExcelFileAsync(BaseDetailExcelDownloadDto input)
+	{
+		return await RequestAsync&lt;IRemoteStreamContent&gt;(nameof(GetDetailListAsExcelFileAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(BaseDetailExcelDownloadDto), input }
+		});
+	}
+
+	public virtual async Task&lt;PagedResultDto&lt;BaseDetailDto&gt;&gt; GetDetailListAsync(GetBaseDetailsInput detailInput)
+	{
+		return await RequestAsync&lt;PagedResultDto&lt;BaseDetailDto&gt;&gt;(nameof(GetDetailListAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(GetBaseDetailsInput), detailInput }
+		});
+	}
+
+	public virtual async Task&lt;LoadResult&gt; GetDetailListDevextremesAsync(DataLoadOptionDevextreme inputDev)
+	{
+		return await RequestAsync&lt;LoadResult&gt;(nameof(GetDetailListDevextremesAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(DataLoadOptionDevextreme), inputDev }
+		});
+	}
+
+	public virtual async Task&lt;BaseDocDto&gt; GetDocAsync(Guid headerId)
+	{
+		return await RequestAsync&lt;BaseDocDto&gt;(nameof(GetDocAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(Guid), headerId }
+		});
+	}
+
+	public virtual async Task&lt;DownloadTokenResultDto&gt; GetDownloadTokenAsync()
+	{
+		return await RequestAsync&lt;DownloadTokenResultDto&gt;(nameof(GetDownloadTokenAsync));
+	}
+
+	public virtual async Task&lt;BaseHeaderDto&gt; GetHeaderAsync(Guid headerId)
+	{
+		return await RequestAsync&lt;BaseHeaderDto&gt;(nameof(GetHeaderAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(Guid), headerId }
+		});
+	}
+
+	public virtual async Task&lt;IRemoteStreamContent&gt; GetHeaderListAsExcelFileAsync(BaseHeaderExcelDownloadDto input)
+	{
+		return await RequestAsync&lt;IRemoteStreamContent&gt;(nameof(GetHeaderListAsExcelFileAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(BaseHeaderExcelDownloadDto), input }
+		});
+	}
+
+	public virtual async Task&lt;PagedResultDto&lt;BaseHeaderDto&gt;&gt; GetHeaderListAsync(GetBaseHeadersInput headerInput)
+	{
+		return await RequestAsync&lt;PagedResultDto&lt;BaseHeaderDto&gt;&gt;(nameof(GetHeaderListAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(GetBaseHeadersInput), headerInput }
+		});
+	}
+
+	public virtual async Task&lt;LoadResult&gt; GetHeaderListDevextremesAsync(DataLoadOptionDevextreme inputDev)
+	{
+		return await RequestAsync&lt;LoadResult&gt;(nameof(GetHeaderListDevextremesAsync), new ClientProxyRequestTypeValue
+		{
+			{ typeof(DataLoadOptionDevextreme), inputDev }
+		});
+	}
+
+	public virtual async Task&lt;BaseDocDto&gt; UpdateDoc(BaseDocUpdateDto input)
+	{
+		return await RequestAsync&lt;BaseDocDto&gt;(nameof(UpdateDoc), new ClientProxyRequestTypeValue
+		{
+			{ typeof(BaseDocUpdateDto), input }
+		});
+	}
+}</Content>
+</TemplateInfo>

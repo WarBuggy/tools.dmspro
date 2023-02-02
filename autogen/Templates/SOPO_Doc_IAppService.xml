@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Inherited IAppService for common Doc in SO/PO Module</TemplateName>
+	<ParamName>sopo_doc_ias</ParamName>
+	<ProjectName>Application.Contracts</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>I|||NamePlural|||AppService.cs</FileName>
+	<Content>using DMSpro.OMS.OrderService.BaseDocs;
+
+namespace DMSpro.OMS.OrderService.|||NamePlural|||
+{
+	public interface I|||NamePlural|||AppService : IBaseDocsAppService
+	{
+	}
+}</Content>
+</TemplateInfo>

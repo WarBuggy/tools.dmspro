@@ -1,0 +1,1 @@
+dotnet run ms=orderservice override=t v=t t=sopo_doc_cp,sopo_doc_cpg o=SalesRequest,ArCreditMemo,ArInvoice,Delivery,PurchaseOrder,PurchaseReceipt,PurchaseRequest,GoodsReturn,GoodsReturnRequest,SalesOrder,ReturnOrder

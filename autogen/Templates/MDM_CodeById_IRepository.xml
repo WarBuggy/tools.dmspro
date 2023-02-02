@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Modify IRepository Add Partial</TemplateName>
+	<ParamName>mdm_codebyid_irepo</ParamName>
+	<ProjectName>Domain</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>I|||Name|||Repository.cs</FileName>
+	<ModList>
+		<Job>
+			<Old>public interface I|||Name|||Repository : IRepository&lt;|||Name|||, Guid&gt;</Old>
+			<New>public partial interface I|||Name|||Repository : IRepository&lt;|||Name|||, Guid&gt;</New>
+		</Job>
+	</ModList>
+</TemplateInfo>
+

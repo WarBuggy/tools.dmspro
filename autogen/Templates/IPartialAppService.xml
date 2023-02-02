@@ -8,11 +8,17 @@
 	<Content>using System.Threading.Tasks;
 using DMSpro.OMS.Shared.Domain.Devextreme;
 using DevExtreme.AspNet.Data.ResponseModel;
+using Microsoft.AspNetCore.Http;
+
 namespace |||NameSpace|||
 {
 	public partial interface I|||NamePlural|||AppService
 	{
 		Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev);
+
+		Task&lt;int&gt;UpdateFromExcelAsync(IFormFile file);
+
+		Task&lt;int&gt; InsertFromExcelAsync(IFormFile file);
 	}
 }</Content>
 </TemplateInfo>

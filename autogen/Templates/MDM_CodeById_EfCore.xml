@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Modify EfCore Add Partial</TemplateName>
+	<ParamName>mdm_codebyid_efcore</ParamName>
+	<ProjectName>EntityFrameworkCore</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>EfCore|||Name|||Repository.cs</FileName>
+	<ModList>
+		<Job>
+			<Old>public class EfCore|||Name|||Repository : EfCoreRepository&lt;MdmServiceDbContext, |||Name|||, Guid&gt;, I|||Name|||Repository</Old>
+			<New>public partial class EfCore|||Name|||Repository : EfCoreRepository&lt;MdmServiceDbContext, |||Name|||, Guid&gt;, I|||Name|||Repository</New>
+		</Job>
+	</ModList>
+</TemplateInfo>
+

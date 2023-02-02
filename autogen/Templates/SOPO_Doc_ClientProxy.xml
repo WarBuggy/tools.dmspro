@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Client Proxy for common Doc in SO/PO Module</TemplateName>
+	<ParamName>sopo_doc_cp</ParamName>
+	<ProjectName>HttpApi.Client</ProjectName>
+	<Path>ClientProxies\DMSpro\OMS\OrderService\Controllers\|||NamePlural|||\</Path>
+	<FileName>|||Name|||ClientProxy.cs</FileName>
+	<Content>namespace DMSpro.OMS.MdmService.Controllers.|||NamePlural|||;
+
+public partial class |||Name|||ClientProxy
+{
+}</Content>
+</TemplateInfo>
