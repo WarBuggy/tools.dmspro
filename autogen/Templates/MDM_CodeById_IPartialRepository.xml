@@ -4,8 +4,9 @@
 	<ParamName>mdm_codebyid_ipartialrepo</ParamName>
 	<ProjectName>Domain</ProjectName>
 	<Path>|||NamePlural|||\</Path>
-	<FileName>|||Name|||PartialRepository.cs</FileName>
+	<FileName>I|||Name|||PartialRepository.cs</FileName>
 	<Content>using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DMSpro.OMS.MdmService.|||NamePlural|||
@@ -13,6 +14,8 @@ namespace DMSpro.OMS.MdmService.|||NamePlural|||
 	public partial interface I|||Name|||Repository
 	{
 		Task&lt;Guid?&gt; GetIdByCodeAsync(string code);
+
+		Task&lt;Dictionary&lt;string, Guid&gt;&gt; GetListIdByCodeAsync(List&lt;string&gt; codes);
 	}
 }</Content>
 </TemplateInfo>
