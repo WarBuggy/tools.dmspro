@@ -16,6 +16,8 @@ namespace DMSpro.OMS.MdmService.|||NamePlural|||
 		Task&lt;Guid?&gt; GetIdByCodeAsync(string code);
 
 		Task&lt;Dictionary&lt;string, Guid&gt;&gt; GetListIdByCodeAsync(List&lt;string&gt; codes);
+
+		Task&lt;int&gt; GetCountByCodeAsync(List&lt;string&gt; codes);
 	}
 }</Content>
 </TemplateInfo>
