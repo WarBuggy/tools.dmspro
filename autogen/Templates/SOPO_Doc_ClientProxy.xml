@@ -5,7 +5,7 @@
 	<ProjectName>HttpApi.Client</ProjectName>
 	<Path>ClientProxies\DMSpro\OMS\OrderService\Controllers\|||NamePlural|||\</Path>
 	<FileName>|||Name|||ClientProxy.cs</FileName>
-	<Content>namespace DMSpro.OMS.MdmService.Controllers.|||NamePlural|||;
+	<Content>namespace DMSpro.OMS.OrderService.Controllers.|||NamePlural|||;
 
 public partial class |||Name|||ClientProxy
 {
