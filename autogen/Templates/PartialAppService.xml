@@ -27,7 +27,10 @@ namespace |||NameSpace|||
 			var base_dataloadoption = new DataSourceLoadOptionsBase();
 			DataLoadParser.Parse(base_dataloadoption,inputDev);
 			LoadResult results = DataSourceLoader.Load(items, base_dataloadoption);
-			results.data = ObjectMapper.Map&lt;IEnumerable&lt;|||Name|||&gt;, IEnumerable&lt;|||Name|||Dto&gt;&gt;(results.data.Cast&lt;|||Name|||&gt;());
+			if (inputDev.Group == null)
+			{
+				results.data = ObjectMapper.Map&lt;IEnumerable&lt;|||Name|||&gt;, IEnumerable&lt;|||Name|||Dto&gt;&gt;(results.data.Cast&lt;|||Name|||&gt;());
+			}
 			return results;
 		}
 

@@ -10,6 +10,8 @@ using DMSpro.OMS.Shared.Domain.Devextreme;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Volo.Abp;
+using System;
 
 namespace |||ControllerNameSpace|||
 {
@@ -25,16 +27,38 @@ namespace |||ControllerNameSpace|||
 
 		[HttpPost]
 		[Route("update-from-excel")]
-		public Task&lt;int&gt; UpdateFromExcelAsync(IFormFile file)
+		public async Task&lt;int&gt; UpdateFromExcelAsync(IFormFile file)
 		{
-			return _|||NamePluralLowerCase|||AppService.UpdateFromExcelAsync(file);
+			try
+            {
+                return await _|||NamePluralLowerCase|||AppService.UpdateFromExcelAsync(file);
+            }
+            catch (BusinessException bex)
+            {
+                throw new UserFriendlyException(message: bex.Message, code: bex.Code, details: bex.Details);
+            }
+            catch (Exception e)
+            {
+                throw new UserFriendlyException(message: e.Message);
+            }
 		}
 
 		[HttpPost]
 		[Route("insert-from-excel")]
-		public Task&lt;int&gt; InsertFromExcelAsync(IFormFile file)
+		public async Task&lt;int&gt; InsertFromExcelAsync(IFormFile file)
         {
-            return _|||NamePluralLowerCase|||AppService.InsertFromExcelAsync(file);
+            try
+            {
+                return await _|||NamePluralLowerCase|||AppService.InsertFromExcelAsync(file);
+            }
+            catch (BusinessException bex)
+            {
+                throw new UserFriendlyException(message: bex.Message, code: bex.Code, details: bex.Details);
+            }
+            catch (Exception e)
+            {
+                throw new UserFriendlyException(message: e.Message);
+            }
         }
 	}
 }</Content>
