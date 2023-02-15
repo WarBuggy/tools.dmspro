@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Generate PartialAppService For MDM Service</TemplateName>
+	<ParamName>mdm_pas</ParamName>
+	<ProjectName>Application</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>|||NamePlural|||PartialAppService.cs</FileName>
+	<Content>using Volo.Abp.Caching;
+using DMSpro.OMS.MdmService.Permissions;
+using Microsoft.AspNetCore.Authorization;
+using Volo.Abp.MultiTenancy;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using DMSpro.OMS.MdmService.Partial;
+
+namespace DMSpro.OMS.MdmService.|||NamePlural|||
+{
+	[Authorize(MdmServicePermissions.|||NamePlural|||.Default)]
+	public partial class |||NamePlural|||AppService : PartialAppService&lt;|||Name|||, |||Name|||Dto, I|||Name|||Repository&gt;,
+		I|||NamePlural|||AppService
+	{
+		private readonly I|||Name|||Repository _|||NameLowerCase|||Repository;
+		private readonly IDistributedCache&lt;|||Name|||ExcelDownloadTokenCacheItem, string&gt;
+			_excelDownloadTokenCache;
+		private readonly |||Name|||Manager _|||NameLowerCase|||Manager;
+
+		public |||NamePlural|||AppService(ICurrentTenant currentTenant,
+			I|||Name|||Repository repository,
+			|||Name|||Manager |||NameLowerCase|||Manager,
+			IConfiguration settingProvider,
+			IDistributedCache&lt;|||Name|||ExcelDownloadTokenCacheItem, string&gt; excelDownloadTokenCache)
+			: base(currentTenant, repository, settingProvider)
+		{
+			_|||NameLowerCase|||Repository = repository;
+			_excelDownloadTokenCache = excelDownloadTokenCache;
+			_|||NameLowerCase|||Manager = |||NameLowerCase|||Manager;
+			
+			_repositories.AddIfNotContains(
+                new KeyValuePair&lt;string, object&gt;("I|||Name|||Repository", _|||NameLowerCase|||Repository));
+		}
+    }
+}</Content>
+</TemplateInfo>

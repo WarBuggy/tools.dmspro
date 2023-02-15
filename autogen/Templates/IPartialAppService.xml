@@ -8,7 +8,7 @@
 	<Content>using System.Threading.Tasks;
 using DMSpro.OMS.Shared.Domain.Devextreme;
 using DevExtreme.AspNet.Data.ResponseModel;
-using Microsoft.AspNetCore.Http;
+using Volo.Abp.Content;
 
 namespace |||NameSpace|||
 {
@@ -16,9 +16,9 @@ namespace |||NameSpace|||
 	{
 		Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev);
 
-		Task&lt;int&gt;UpdateFromExcelAsync(IFormFile file);
+		Task&lt;int&gt;UpdateFromExcelAsync(IRemoteStreamContent file);
 
-		Task&lt;int&gt; InsertFromExcelAsync(IFormFile file);
+		Task&lt;int&gt; InsertFromExcelAsync(IRemoteStreamContent file);
 	}
 }</Content>
 </TemplateInfo>

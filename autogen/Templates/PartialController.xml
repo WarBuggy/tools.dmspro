@@ -7,11 +7,11 @@
 	<FileName>|||Name|||PartialController.cs</FileName>
 	<Content>using DevExtreme.AspNet.Data.ResponseModel;
 using DMSpro.OMS.Shared.Domain.Devextreme;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Volo.Abp;
 using System;
+using Volo.Abp.Content;
 
 namespace |||ControllerNameSpace|||
 {
@@ -27,7 +27,7 @@ namespace |||ControllerNameSpace|||
 
 		[HttpPost]
 		[Route("update-from-excel")]
-		public async Task&lt;int&gt; UpdateFromExcelAsync(IFormFile file)
+		public async Task&lt;int&gt; UpdateFromExcelAsync(IRemoteStreamContent file)
 		{
 			try
             {
@@ -45,7 +45,7 @@ namespace |||ControllerNameSpace|||
 
 		[HttpPost]
 		[Route("insert-from-excel")]
-		public async Task&lt;int&gt; InsertFromExcelAsync(IFormFile file)
+		public async Task&lt;int&gt; InsertFromExcelAsync(IRemoteStreamContent file)
         {
             try
             {

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add New Partial EfCore For Entity Without Code Property</TemplateName>
+	<ParamName>mdm_nocode_efcorepartial</ParamName>
+	<ProjectName>EntityFrameworkCore</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>EfCore|||Name|||PartialRepository.cs</FileName>
+	<Content>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace DMSpro.OMS.MdmService.|||NamePlural|||
+{
+	public partial class EfCore|||Name|||Repository
+	{
+		public virtual async Task&lt;List&lt;|||Name|||&gt;&gt; GetByIdAsync(List&lt;Guid&gt; ids)
+        {
+            var items = (await GetDbSetAsync()).Where(x => ids.Contains(x.Id));
+            return await items.ToListAsync();
+        }
+    }
+}</Content>
+</TemplateInfo>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TemplateInfo>
-	<TemplateName>Add New Partial IRepository</TemplateName>
-	<ParamName>mdm_codebyid_ipartialrepo</ParamName>
+	<TemplateName>Modify IRepository Add Partial For Entity Without Code Property</TemplateName>
+	<ParamName>mdm_nocode_ipr</ParamName>
 	<ProjectName>Domain</ProjectName>
 	<Path>|||NamePlural|||\</Path>
 	<FileName>I|||Name|||PartialRepository.cs</FileName>
@@ -13,15 +13,8 @@ namespace DMSpro.OMS.MdmService.|||NamePlural|||
 {
 	public partial interface I|||Name|||Repository
 	{
-		Task&lt;Guid?&gt; GetIdByCodeAsync(string code);
-
-		Task&lt;Dictionary&lt;string, Guid&gt;&gt; GetListIdByCodeAsync(List&lt;string&gt; codes);
-
-		Task&lt;int&gt; GetCountByCodeAsync(List&lt;string&gt; codes);
-
-		Task&lt;bool&gt; CheckUniqueCodeForUpdate(List&lt;string&gt; codes, List&lt;Guid&gt; ids);
-
 		Task&lt;List&lt;|||Name|||&gt;&gt; GetByIdAsync(List&lt;Guid&gt; ids);
-	}
+    }
 }</Content>
 </TemplateInfo>
+

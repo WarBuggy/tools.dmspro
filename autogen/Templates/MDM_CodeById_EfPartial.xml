@@ -10,6 +10,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
+using Microsoft.EntityFrameworkCore;
 
 namespace DMSpro.OMS.MdmService.|||NamePlural|||
 {
@@ -43,9 +44,23 @@ namespace DMSpro.OMS.MdmService.|||NamePlural|||
         }
 		
 		public virtual async Task&lt;int&gt; GetCountByCodeAsync(List&lt;string&gt; codes)
+		{
+		var items = (await GetDbSetAsync()).Where(x => codes.Contains(x.Code));
+		return items.Count();
+		}
+
+		public virtual async Task&lt;bool&gt; CheckUniqueCodeForUpdate(List&lt;string&gt; codes, 
+			List&lt;Guid&gt; ids)
+		{
+			var items = await (await GetDbSetAsync()).
+			Where(x => codes.Contains(x.Code) &amp;&amp; !ids.Contains(x.Id)).ToListAsync();
+			return items.Count() &lt;= 0 ? true : false;
+		}
+
+		public virtual async Task&lt;List&lt;|||Name|||&gt;&gt; GetByIdAsync(List&lt;Guid&gt; ids)
         {
-            var items = (await GetDbSetAsync()).Where(x => codes.Contains(x.Code));
-            return items.Count();
+            var items = (await GetDbSetAsync()).Where(x => ids.Contains(x.Id));
+            return await items.ToListAsync();
         }
     }
 }</Content>
