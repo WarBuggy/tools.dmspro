@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Add Methods Helping Generating Excel Template For Entity</TemplateName>
+	<ParamName>mdm_partial_entity_method</ParamName>
+	<ProjectName>Domain</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>|||Name|||Partial.cs</FileName>
+	<Content>using System.Collections.Generic;
+
+namespace DMSpro.OMS.MdmService.|||NamePlural|||
+{
+	public partial class |||Name|||
+	{
+		public Dictionary&lt;string, (int, string, string, string)&gt;
+			GetExcelTemplateInfo()
+		{
+			return new()
+			{
+				{ "", (0, "IRepository", "", "") },
+			};
+		}
+
+		public List&lt;string&gt; GetNotNullProperty()
+        {
+            return new()
+            {
+                "Code",
+            };
+        }
+    }
+}</Content>
+</TemplateInfo>
+

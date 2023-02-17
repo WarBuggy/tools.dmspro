@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TemplateInfo>
+	<TemplateName>Modify Entity Add Partial</TemplateName>
+	<ParamName>mdm_partial_entity</ParamName>
+	<ProjectName>Domain</ProjectName>
+	<Path>|||NamePlural|||\</Path>
+	<FileName>|||Name|||.cs</FileName>
+	<ModList>
+		<Job>
+			<Old>public class |||Name||| : FullAuditedAggregateRoot&lt;Guid&gt;, IMultiTenant</Old>
+			<New>public partial class |||Name||| : FullAuditedAggregateRoot&lt;Guid&gt;, IMultiTenant</New>
+		</Job>
+	</ModList>
+</TemplateInfo>
+

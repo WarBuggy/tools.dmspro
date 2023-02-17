@@ -17,7 +17,6 @@ namespace |||ControllerNameSpace|||
 {
 	public partial class |||Name|||Controller
 	{
-
 		[HttpGet]
 		[Route("GetListDevextremes")]
 		public Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev)
@@ -50,6 +49,24 @@ namespace |||ControllerNameSpace|||
             try
             {
                 return await _|||NamePluralLowerCase|||AppService.InsertFromExcelAsync(file);
+            }
+            catch (BusinessException bex)
+            {
+                throw new UserFriendlyException(message: bex.Message, code: bex.Code, details: bex.Details);
+            }
+            catch (Exception e)
+            {
+                throw new UserFriendlyException(message: e.Message);
+            }
+        }
+		
+		[HttpGet]
+        [Route("get-excel-template")]
+        public virtual async Task&lt;IRemoteStreamContent&gt; GenerateExcelTemplatesAsync()
+        {
+            try
+            {
+                return await _|||NamePluralLowerCase|||AppService.GenerateExcelTemplatesAsync();
             }
             catch (BusinessException bex)
             {

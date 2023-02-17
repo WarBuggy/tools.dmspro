@@ -16,9 +16,11 @@ namespace |||NameSpace|||
 	{
 		Task&lt;LoadResult&gt; GetListDevextremesAsync(DataLoadOptionDevextreme inputDev);
 
-		Task&lt;int&gt;UpdateFromExcelAsync(IRemoteStreamContent file);
+		Task&lt;int&gt; UpdateFromExcelAsync(IRemoteStreamContent file);
 
 		Task&lt;int&gt; InsertFromExcelAsync(IRemoteStreamContent file);
+
+		Task&lt;IRemoteStreamContent&gt; GenerateExcelTemplatesAsync();
 	}
 }</Content>
 </TemplateInfo>
